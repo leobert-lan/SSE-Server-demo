@@ -1,0 +1,31 @@
+plugins {
+    id 'org.springframework.boot' version "$spring_version"
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+}
+
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        def requested = details.requested
+        if(requested.group == 'org.slfj') {
+            if(requested.name == "slf4j-api") {
+                details.useVersion("$slf4j_version")
+            }
+        }
+    }
+}
+
+dependencies {
+    testImplementation group: 'junit', name: 'junit', version: "$junit_version"
+    implementation "org.springframework.boot:spring-boot-starter-web:$spring_version"
+    testImplementation("org.springframework.boot:spring-boot-starter-test:$spring_version") {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+test {
+    useJUnitPlatform()
+}
