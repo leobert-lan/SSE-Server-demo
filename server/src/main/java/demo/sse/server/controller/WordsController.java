@@ -32,10 +32,11 @@ public class WordsController {
 
         cachedThreadPool.execute(() -> {
             try {
-                for (int i = parseLastId(lastId); i < WORDS.length; i++) {
+                for (int i = (parseLastId(lastId) + 1); i < WORDS.length; i++) {
                     emitter.send(
                             SseEmitter.event()
                                     .id(String.valueOf(i))
+                                    .name("name")
                                     .data(WORDS[i])
                     );
                     TimeUnit.SECONDS.sleep(5);
@@ -54,7 +55,7 @@ public class WordsController {
 
     private int parseLastId(String lastId) {
         try {
-            return Integer.parseInt(lastId) + 1;
+            return Integer.parseInt(lastId);
         } catch (NumberFormatException e) {
             return 0;
         }
